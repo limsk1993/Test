@@ -1,6 +1,7 @@
 package com.sumkim.view.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -10,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BottomCallBackLazyColumn(
@@ -18,6 +20,7 @@ fun BottomCallBackLazyColumn(
     verticalArrangement: Arrangement.Vertical =
         if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
     atBottom: (() -> Unit)? = null,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     content: LazyListScope.() -> Unit
 ) {
     val scrollState = rememberLazyListState()
@@ -27,7 +30,8 @@ fun BottomCallBackLazyColumn(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = verticalArrangement,
-        state = scrollState
+        state = scrollState,
+        contentPadding = contentPadding
     ) {
         content()
     }

@@ -1,7 +1,9 @@
 package com.sumkim.test.route
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -10,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,20 +60,23 @@ fun SearchScreen(
     onRefresh: () -> Unit
 ) {
     val nav = Route.nav
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         CustomSearchBar(
             onSearch = onSearch
         )
+        Spacer(Modifier.height(8.dp))
         PullToRefreshBox(
-            modifier = modifier,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh
         ) {
             BottomCallBackLazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .background(Color.LightGray),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(8.dp),
                 atBottom = {
                     atBottom.invoke()
                 }
@@ -79,6 +85,10 @@ fun SearchScreen(
                     ItemCard(
                         title = item.title,
                         thumbnail = item.thumbnail,
+                        publisher = item.publisher,
+                        authors = item.authors,
+                        price = item.price,
+                        salePrice = item.salePrice,
                         onItemClick = {
                             nav.moveToViewer(item.isbn)
                         },

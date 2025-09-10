@@ -120,7 +120,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun selectedSortItems(targetIsbn: String?): Document? {
-        val items = items.value
+        val items = items.value + favoriteItems.value
         val targetItem = items.find { it.isbn == targetIsbn }
         return targetItem
     }

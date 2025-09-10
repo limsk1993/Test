@@ -46,6 +46,6 @@ interface FavoriteDao {
     @Delete
     suspend fun deleteFavorite(item: Document)
 
-    @Query("SELECT * FROM favorite_table WHERE title = :isbn")
+    @Query("SELECT * FROM favorite_table WHERE isbn = :isbn")
     fun getFavorite(isbn: String): List<Document>
 }

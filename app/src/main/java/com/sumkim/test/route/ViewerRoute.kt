@@ -23,7 +23,6 @@ import com.sumkim.test.ui.theme.TestTheme
 import com.sumkim.test.viewModel.MainViewModel
 import com.sumkim.view.component.CustomAsyncImage
 import com.sumkim.view.component.CustomImageButton
-import com.sumkim.view.component.ScrollbarLazyColumn
 
 @Composable
 fun ViewerRoute(
