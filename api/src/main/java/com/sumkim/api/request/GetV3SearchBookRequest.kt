@@ -18,8 +18,3 @@ data class GetV3SearchBookRequest(
     @Query("target")
     val target: String? = null,
 )
-
-enum class Sort(val value: String) {
-    ACCURACY("accuracy"),
-    LATEST("latest")
-}

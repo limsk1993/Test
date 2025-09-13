@@ -25,11 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sumkim.api.request.Sort
 import com.sumkim.api.response.Document
 import com.sumkim.test.R
 import com.sumkim.test.Route
 import com.sumkim.test.RouteProvider
+import com.sumkim.test.Sort
 import com.sumkim.test.getLocalDate
 import com.sumkim.test.moveToDetail
 import com.sumkim.test.ui.theme.TestTheme

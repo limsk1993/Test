@@ -53,3 +53,8 @@ fun String.getLocalDate(): String {
 sealed interface CommonEvent {
     data class Toast(val msg: String? = null, @StringRes val resId: Int? = null) : CommonEvent
 }
+
+enum class Sort(val value: String) {
+    ACCURACY("accuracy"),
+    LATEST("latest")
+}

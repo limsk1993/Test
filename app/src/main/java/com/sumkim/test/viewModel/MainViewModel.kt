@@ -10,9 +10,9 @@ import com.sumkim.api.call.onException
 import com.sumkim.api.call.onSuccess
 import com.sumkim.api.db.FavoriteDB
 import com.sumkim.api.db.FavoriteDao
-import com.sumkim.api.request.Sort
 import com.sumkim.test.CommonEvent
 import com.sumkim.test.R
+import com.sumkim.test.Sort
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
