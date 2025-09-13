@@ -53,8 +53,14 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 favoriteDao = FavoriteDB.getDatabase(context).getFavoriteDao()
-                _favoriteDocuments.value = favoriteDao.getFavoriteList()
+                getFavoriteDocuments()
             }
+        }
+    }
+
+    fun getFavoriteDocuments() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            _favoriteDocuments.value = favoriteDao.getFavoriteList()
         }
     }
 

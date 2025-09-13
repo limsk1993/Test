@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +42,7 @@ fun DetailRoute(
     }
 
     val document by vm.document.collectAsStateWithLifecycle()
+    val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
 
     vm.eventChannel.collectWithLifecycle {
         when (it) {
@@ -52,6 +55,8 @@ fun DetailRoute(
 
     DetailScreen(
         document = document,
+        favoriteDocuments = favoriteDocuments,
+        onFavoriteClick = vm::toggleFavorite
     )
 }
 
@@ -59,6 +64,8 @@ fun DetailRoute(
 @Composable
 fun DetailScreen(
     document: Document?,
+    favoriteDocuments: List<Document>,
+    onFavoriteClick: (Document) -> Unit
 ) {
     val nav = Route.nav
     Scaffold(
@@ -70,10 +77,18 @@ fun DetailScreen(
                 navigationIcon = {
                     CustomImageButton(
                         painter = painterResource(R.drawable.ic_arrow_back),
-                        contentDescription = "close",
+                        contentDescription = "back",
                         onClick = {
                             nav.popBackStack()
                         }
+                    )
+                },
+                actions = {
+                    CustomImageButton(
+                        painter = painterResource(if (favoriteDocuments.contains(document)) com.sumkim.view.R.drawable.ic_favorite_on else com.sumkim.view.R.drawable.ic_favorite_off),
+                        contentDescription = "IsFavorite",
+                        colorFilter = ColorFilter.tint(Color.Red),
+                        onClick = { document?.let { onFavoriteClick(it) } }
                     )
                 }
             )

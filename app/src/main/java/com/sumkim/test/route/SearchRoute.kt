@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,9 +33,15 @@ import com.sumkim.view.component.PullToRefreshBox
 fun SearchRoute(
     vm: MainViewModel = hiltViewModel()
 ) {
+    val nav = Route.nav
     val isLoading by vm.isLoading.collectAsStateWithLifecycle()
     val documents by vm.documents.collectAsStateWithLifecycle()
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
+
+    val backStackEntry = remember { nav.currentBackStackEntry }
+    LaunchedEffect(backStackEntry) {
+        vm.getFavoriteDocuments()
+    }
 
     SearchScreen(
         modifier = Modifier.fillMaxSize(),

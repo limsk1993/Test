@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +33,14 @@ import com.sumkim.view.component.DocumentCard
 fun FavoriteRoute(
     vm: MainViewModel = hiltViewModel()
 ) {
+    val nav = Route.nav
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
+
+    val backStackEntry = remember { nav.currentBackStackEntry }
+    LaunchedEffect(backStackEntry) {
+        vm.getFavoriteDocuments()
+    }
+
     FavoriteScreen(
         modifier = Modifier.fillMaxSize(),
         favoriteDocuments = favoriteDocuments,
