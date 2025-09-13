@@ -49,6 +49,7 @@ fun SearchRoute(
     val isLoading by vm.isLoading.collectAsStateWithLifecycle()
     val documents by vm.documents.collectAsStateWithLifecycle()
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
+    val sort by vm.sort.collectAsStateWithLifecycle()
 
     val backStackEntry = remember { nav.currentBackStackEntry }
     LaunchedEffect(backStackEntry) {
@@ -63,7 +64,9 @@ fun SearchRoute(
         onFavoriteClick = vm::toggleFavorite,
         atBottom = vm::getV3SearchBook,
         isRefreshing = isLoading,
-        onRefresh = vm::refresh
+        onRefresh = vm::refresh,
+        sort = sort,
+        onSort = vm::setSort
     )
 }
 
@@ -76,7 +79,9 @@ fun SearchScreen(
     onFavoriteClick: (Document) -> Unit,
     atBottom: () -> Unit,
     isRefreshing: Boolean,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    sort: String,
+    onSort: (String) -> Unit,
 ) {
     val nav = Route.nav
     Column(
@@ -88,11 +93,13 @@ fun SearchScreen(
         Spacer(Modifier.height(8.dp))
 
         Box(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         ) {
             CustomText(
                 modifier = Modifier.align(Alignment.CenterStart),
-                text = "정확도순",
+                text = if (sort == Sort.ACCURACY.value) "정확도순" else "발간일순",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -103,6 +110,9 @@ fun SearchScreen(
                     title = "정렬",
                     resId = R.drawable.ic_sort,
                     items = listOf(Sort.ACCURACY.value, Sort.LATEST.value),
+                    onItemSelected = {
+                        onSort(it)
+                    }
                 )
             }
         }

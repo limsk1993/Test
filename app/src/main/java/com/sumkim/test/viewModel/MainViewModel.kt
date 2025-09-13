@@ -10,6 +10,7 @@ import com.sumkim.api.call.onException
 import com.sumkim.api.call.onSuccess
 import com.sumkim.api.db.FavoriteDB
 import com.sumkim.api.db.FavoriteDao
+import com.sumkim.api.request.Sort
 import com.sumkim.test.CommonEvent
 import com.sumkim.test.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +38,9 @@ class MainViewModel @Inject constructor(
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
+
+    private val _sort: MutableStateFlow<String> = MutableStateFlow(Sort.ACCURACY.value)
+    val sort: StateFlow<String> = _sort.asStateFlow()
 
     private val _page: MutableStateFlow<Int> = MutableStateFlow(1)
     val page: StateFlow<Int> = _page.asStateFlow()
@@ -71,6 +75,14 @@ class MainViewModel @Inject constructor(
         getV3SearchBook()
     }
 
+    fun setSort(changeSort: String) {
+        if (sort.value == changeSort) return
+        _sort.value = changeSort
+        _page.value = 1
+        _documents.value = listOf()
+        getV3SearchBook()
+    }
+
     fun getV3SearchBook() = viewModelScope.launch {
         try {
             _isLoading.value = true
@@ -78,6 +90,7 @@ class MainViewModel @Inject constructor(
             ar.getV3SearchBook(
                 GetV3SearchBookRequest(
                     query = query.value,
+                    sort = sort.value,
                     page = page.value,
                     size = 20
                 )
@@ -103,6 +116,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun refresh() = viewModelScope.launch {
+        _sort.value = Sort.ACCURACY.value
         _page.value = 1
         _documents.value = listOf()
         getV3SearchBook()
