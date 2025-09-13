@@ -4,22 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.sumkim.test.route.MainRoute
 import com.sumkim.test.route.DetailRoute
+import com.sumkim.test.route.MainRoute
 import com.sumkim.test.ui.theme.TestTheme
-import com.sumkim.test.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val vm: MainViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,18 +24,8 @@ class MainActivity : ComponentActivity() {
                         nav,
                         Route.Main,
                     ) {
-                        composable(Route.Main) { MainRoute(vm) }
-                        composable(
-                            Route.getDetailRoute(),
-                            listOf(
-                                navArgument("isbn") { type = NavType.StringType },
-                            )
-                        ) {
-                            DetailRoute(
-                                vm = vm,
-                                selectedIsbn = it.arguments?.getString("isbn"),
-                            )
-                        }
+                        composable(Route.Main) { MainRoute() }
+                        composable(Route.Detail) { DetailRoute() }
                     }
                 }
             }

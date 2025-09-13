@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.sumkim.view.R
 
 @Composable
-fun ItemCard(
+fun DocumentCard(
     title: String?,
     thumbnail: String?,
     publisher: String?,
@@ -35,7 +35,7 @@ fun ItemCard(
     price: Int?,
     salePrice: Int?,
     modifier: Modifier = Modifier,
-    onItemClick: (() -> Unit)? = null,
+    onDocumentClick: (() -> Unit)? = null,
     isFavorite: Boolean = false,
     onFavoriteClick: (() -> Unit)? = null,
 ) {
@@ -46,7 +46,7 @@ fun ItemCard(
             .background(Color.White)
             .height(120.dp)
             .padding(8.dp)
-            .clickable { onItemClick?.invoke() },
+            .clickable { onDocumentClick?.invoke() },
     ) {
         CustomAsyncImage(
             model = thumbnail,

@@ -41,11 +41,11 @@ class MainViewModel @Inject constructor(
     private val _page: MutableStateFlow<Int> = MutableStateFlow(1)
     val page: StateFlow<Int> = _page.asStateFlow()
 
-    private val _items = MutableStateFlow<List<Document>>(listOf())
-    val items = _items.asStateFlow()
+    private val _documents = MutableStateFlow<List<Document>>(listOf())
+    val documents = _documents.asStateFlow()
 
-    private val _favoriteItems = MutableStateFlow<List<Document>>(listOf())
-    val favoriteItems = _favoriteItems.asStateFlow()
+    private val _favoriteDocuments = MutableStateFlow<List<Document>>(listOf())
+    val favoriteDocuments = _favoriteDocuments.asStateFlow()
 
     lateinit var favoriteDao: FavoriteDao
 
@@ -53,7 +53,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 favoriteDao = FavoriteDB.getDatabase(context).getFavoriteDao()
-                _favoriteItems.value = favoriteDao.getFavoriteList()
+                _favoriteDocuments.value = favoriteDao.getFavoriteList()
             }
         }
     }
@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
     fun querySearch(query: String) {
         _query.value = query
         _page.value = 1
-        _items.value = listOf()
+        _documents.value = listOf()
         getV3SearchBook()
     }
 
@@ -78,10 +78,10 @@ class MainViewModel @Inject constructor(
             ).onSuccess {
                 _page.value = page.value + 1
 
-                val tempItems = mutableListOf<Document>()
-                tempItems.addAll(items.value)
-                tempItems.addAll(it.documents ?: listOf())
-                _items.value = tempItems
+                val tempDocuments = mutableListOf<Document>()
+                tempDocuments.addAll(documents.value)
+                tempDocuments.addAll(it.documents ?: listOf())
+                _documents.value = tempDocuments
                 _isLoading.value = false
             }.onError {
                 _eventChannel.send(CommonEvent.Toast(resId = R.string.error_default))
@@ -98,30 +98,24 @@ class MainViewModel @Inject constructor(
 
     fun refresh() = viewModelScope.launch {
         _page.value = 1
-        _items.value = listOf()
+        _documents.value = listOf()
         getV3SearchBook()
     }
 
-    fun toggleFavorite(item: Document) = viewModelScope.launch {
+    fun toggleFavorite(document: Document) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             try {
-                val favoriteItem = favoriteDao.getFavorite(item.isbn)
-                if (favoriteItem.isEmpty()) {
-                    favoriteDao.insertFavorite(item)
+                val favoriteDocument = favoriteDao.getFavorite(document.isbn)
+                if (favoriteDocument.isEmpty()) {
+                    favoriteDao.insertFavorite(document)
                 } else {
-                    favoriteDao.deleteFavorite(item)
+                    favoriteDao.deleteFavorite(document)
                 }
             } catch (e: Exception) {
                 _eventChannel.send(CommonEvent.Toast(resId = R.string.error_default))
             } finally {
-                _favoriteItems.value = favoriteDao.getFavoriteList()
+                _favoriteDocuments.value = favoriteDao.getFavoriteList()
             }
         }
-    }
-
-    fun selectedSortItems(targetIsbn: String?): Document? {
-        val items = items.value + favoriteItems.value
-        val targetItem = items.find { it.isbn == targetIsbn }
-        return targetItem
     }
 }

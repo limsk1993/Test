@@ -1,7 +1,9 @@
 package com.sumkim.api.response
 
+import android.os.Parcelable
 import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class GetV3SearchBookResponse(
     @SerializedName("meta")
@@ -23,6 +25,7 @@ data class Meta(
 )
 
 @Entity(tableName = "favorite_table", primaryKeys = ["isbn"])
+@Parcelize
 data class Document(
     @SerializedName("authors")
     val authors: List<String>? = null,
@@ -59,4 +62,4 @@ data class Document(
 
     @SerializedName("url")
     val url: String? = null,
-)
+): Parcelable

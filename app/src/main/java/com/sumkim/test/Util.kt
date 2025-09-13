@@ -17,8 +17,6 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -41,8 +39,6 @@ object Extensions {
             }
         }
     }
-
-    fun String.encodeUrl(): String = URLEncoder.encode(this, StandardCharsets.UTF_8.toString())
 }
 
 sealed interface CommonEvent {

@@ -7,12 +7,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sumkim.api.response.Document
 import com.sumkim.test.CommonEvent
 import com.sumkim.test.Extensions.collectWithLifecycle
@@ -20,16 +23,24 @@ import com.sumkim.test.R
 import com.sumkim.test.Route
 import com.sumkim.test.RouteProvider
 import com.sumkim.test.ui.theme.TestTheme
-import com.sumkim.test.viewModel.MainViewModel
+import com.sumkim.test.viewModel.DetailViewModel
 import com.sumkim.view.component.CustomAsyncImage
 import com.sumkim.view.component.CustomImageButton
 
 @Composable
 fun DetailRoute(
-    vm: MainViewModel = hiltViewModel(),
-    selectedIsbn: String? = null,
+    vm: DetailViewModel = hiltViewModel()
 ) {
+    val nav = Route.nav
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        if (vm.ensureInit()) return@LaunchedEffect
+        vm.setDocument(nav.previousBackStackEntry?.savedStateHandle?.get<Document>("document"))
+    }
+
+    val document by vm.document.collectAsStateWithLifecycle()
+
     vm.eventChannel.collectWithLifecycle {
         when (it) {
             is CommonEvent.Toast -> {
@@ -40,7 +51,7 @@ fun DetailRoute(
     }
 
     DetailScreen(
-        document = vm.selectedSortItems(selectedIsbn),
+        document = document,
     )
 }
 

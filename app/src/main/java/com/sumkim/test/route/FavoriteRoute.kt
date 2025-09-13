@@ -24,17 +24,17 @@ import com.sumkim.test.moveToDetail
 import com.sumkim.test.ui.theme.TestTheme
 import com.sumkim.test.viewModel.MainViewModel
 import com.sumkim.view.component.CustomSearchBar
-import com.sumkim.view.component.ItemCard
+import com.sumkim.view.component.DocumentCard
 
 
 @Composable
 fun FavoriteRoute(
     vm: MainViewModel = hiltViewModel()
 ) {
-    val favoriteItems by vm.favoriteItems.collectAsStateWithLifecycle()
+    val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
     FavoriteScreen(
         modifier = Modifier.fillMaxSize(),
-        favoriteItems = favoriteItems,
+        favoriteDocuments = favoriteDocuments,
         onSearch = {},
         onFavoriteClick = vm::toggleFavorite
     )
@@ -44,7 +44,7 @@ fun FavoriteRoute(
 fun FavoriteScreen(
     modifier: Modifier = Modifier,
     onSearch: (String) -> Unit,
-    favoriteItems: List<Document>,
+    favoriteDocuments: List<Document>,
     onFavoriteClick: (Document) -> Unit,
 ) {
     val nav = Route.nav
@@ -62,19 +62,19 @@ fun FavoriteScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(8.dp),
         ) {
-            items(favoriteItems) { item ->
-                ItemCard(
-                    title = item.title,
-                    thumbnail = item.thumbnail,
-                    publisher = item.publisher,
-                    authors = item.authors,
-                    price = item.price,
-                    salePrice = item.salePrice,
-                    onItemClick = {
-                        nav.moveToDetail(item.isbn)
+            items(favoriteDocuments) { document ->
+                DocumentCard(
+                    title = document.title,
+                    thumbnail = document.thumbnail,
+                    publisher = document.publisher,
+                    authors = document.authors,
+                    price = document.price,
+                    salePrice = document.salePrice,
+                    onDocumentClick = {
+                        nav.moveToDetail(document)
                     },
-                    isFavorite = favoriteItems.contains(item),
-                    onFavoriteClick = { onFavoriteClick(item) }
+                    isFavorite = favoriteDocuments.contains(document),
+                    onFavoriteClick = { onFavoriteClick(document) }
                 )
             }
         }

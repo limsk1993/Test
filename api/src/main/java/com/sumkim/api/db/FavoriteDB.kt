@@ -41,10 +41,10 @@ interface FavoriteDao {
     fun getFavoriteList(): List<Document>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavorite(item: Document)
+    suspend fun insertFavorite(document: Document)
 
     @Delete
-    suspend fun deleteFavorite(item: Document)
+    suspend fun deleteFavorite(document: Document)
 
     @Query("SELECT * FROM favorite_table WHERE isbn = :isbn")
     fun getFavorite(isbn: String): List<Document>

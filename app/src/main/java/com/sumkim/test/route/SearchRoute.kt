@@ -24,7 +24,7 @@ import com.sumkim.test.ui.theme.TestTheme
 import com.sumkim.test.viewModel.MainViewModel
 import com.sumkim.view.component.BottomCallBackLazyColumn
 import com.sumkim.view.component.CustomSearchBar
-import com.sumkim.view.component.ItemCard
+import com.sumkim.view.component.DocumentCard
 import com.sumkim.view.component.PullToRefreshBox
 
 @Composable
@@ -32,14 +32,14 @@ fun SearchRoute(
     vm: MainViewModel = hiltViewModel()
 ) {
     val isLoading by vm.isLoading.collectAsStateWithLifecycle()
-    val items by vm.items.collectAsStateWithLifecycle()
-    val favoriteItems by vm.favoriteItems.collectAsStateWithLifecycle()
+    val documents by vm.documents.collectAsStateWithLifecycle()
+    val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
 
     SearchScreen(
         modifier = Modifier.fillMaxSize(),
-        items = items,
+        documents = documents,
         onSearch = vm::querySearch,
-        favoriteItems = favoriteItems,
+        favoriteDocuments = favoriteDocuments,
         onFavoriteClick = vm::toggleFavorite,
         atBottom = vm::getV3SearchBook,
         isRefreshing = isLoading,
@@ -50,9 +50,9 @@ fun SearchRoute(
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    items: List<Document>,
+    documents: List<Document>,
     onSearch: (String) -> Unit,
-    favoriteItems: List<Document>,
+    favoriteDocuments: List<Document>,
     onFavoriteClick: (Document) -> Unit,
     atBottom: () -> Unit,
     isRefreshing: Boolean,
@@ -80,19 +80,19 @@ fun SearchScreen(
                     atBottom.invoke()
                 }
             ) {
-                items(items) { item ->
-                    ItemCard(
-                        title = item.title,
-                        thumbnail = item.thumbnail,
-                        publisher = item.publisher,
-                        authors = item.authors,
-                        price = item.price,
-                        salePrice = item.salePrice,
-                        onItemClick = {
-                            nav.moveToDetail(item.isbn)
+                items(documents) { document ->
+                    DocumentCard(
+                        title = document.title,
+                        thumbnail = document.thumbnail,
+                        publisher = document.publisher,
+                        authors = document.authors,
+                        price = document.price,
+                        salePrice = document.salePrice,
+                        onDocumentClick = {
+                            nav.moveToDetail(document)
                         },
-                        isFavorite = favoriteItems.contains(item),
-                        onFavoriteClick = { onFavoriteClick(item) }
+                        isFavorite = favoriteDocuments.contains(document),
+                        onFavoriteClick = { onFavoriteClick(document) }
                     )
                 }
             }

@@ -24,12 +24,12 @@ import com.sumkim.view.R
 @Composable
 fun CustomBottomNavigation(
     nav: NavHostController,
-    items: List<MainScreen>
+    screens: List<MainScreen>
 ) {
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     BottomAppBar {
-        items.forEach { screen ->
+        screens.forEach { screen ->
             val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
             Column(
                 modifier = Modifier
