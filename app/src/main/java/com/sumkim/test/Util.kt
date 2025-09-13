@@ -56,5 +56,12 @@ sealed interface CommonEvent {
 
 enum class Sort(val value: String) {
     ACCURACY("accuracy"),
-    LATEST("latest")
+    LATEST("latest"),
+    ASC("asc"),
+    DESC("desc"),
+}
+
+enum class Filter(val value: String) {
+    LOWEST_PRICE("lowest_price"),
+    HIGHEST_PRICE("highest_price")
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sumkim.api.response.Document
+import com.sumkim.test.Filter
 import com.sumkim.test.R
 import com.sumkim.test.Route
 import com.sumkim.test.RouteProvider
@@ -48,6 +49,8 @@ fun FavoriteRoute(
 ) {
     val nav = Route.nav
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
+    val sort by vm.favoriteSort.collectAsStateWithLifecycle()
+    val filter by vm.favoriteFilter.collectAsStateWithLifecycle()
 
     val backStackEntry = remember { nav.currentBackStackEntry }
     LaunchedEffect(backStackEntry) {
@@ -57,8 +60,12 @@ fun FavoriteRoute(
     FavoriteScreen(
         modifier = Modifier.fillMaxSize(),
         favoriteDocuments = favoriteDocuments,
-        onSearch = {},
-        onFavoriteClick = vm::toggleFavorite
+        onSearch = vm::favoriteSearch,
+        onFavoriteClick = vm::toggleFavorite,
+        sort = sort,
+        onSort = vm::setFavoriteSort,
+        filter = filter,
+        onFilter = vm::setFavoriteFilter
     )
 }
 
@@ -68,6 +75,10 @@ fun FavoriteScreen(
     onSearch: (String) -> Unit,
     favoriteDocuments: List<Document>,
     onFavoriteClick: (Document) -> Unit,
+    sort: String,
+    onSort: (String) -> Unit,
+    filter: String,
+    onFilter: (String) -> Unit,
 ) {
     val nav = Route.nav
     Column(
@@ -81,25 +92,46 @@ fun FavoriteScreen(
         Box(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         ) {
-            CustomText(
-                modifier = Modifier.align(Alignment.CenterStart),
-                text = "오름차순(제목)",
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                CustomText(
+                    text = if (sort == Sort.ASC.value) "오름차순(제목)" else "내림차순(제목)",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.width(4.dp))
+                CustomText(
+                    text = if (filter == Filter.LOWEST_PRICE.value) "낮은가격순" else "높은가격순",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 CustomPicker(
                     title = "필터",
                     resId = R.drawable.ic_filter,
-                    items = listOf(Sort.ACCURACY.value, Sort.LATEST.value),
+                    items = listOf(
+                        Pair("오름차순(제목)", Sort.ASC.value),
+                        Pair("내림차순(제목)", Sort.DESC.value)
+                    ),
+                    onItemSelected = {
+                        onSort(it)
+                    }
                 )
                 Spacer(Modifier.width(4.dp))
                 CustomPicker(
                     title = "정렬",
                     resId = R.drawable.ic_sort,
-                    items = listOf(Sort.ACCURACY.value, Sort.LATEST.value),
+                    items = listOf(
+                        Pair("낮은가격순", Filter.LOWEST_PRICE.value),
+                        Pair("높은가격순", Filter.HIGHEST_PRICE.value)
+                    ),
+                    onItemSelected = {
+                        onFilter(it)
+                    }
                 )
             }
         }

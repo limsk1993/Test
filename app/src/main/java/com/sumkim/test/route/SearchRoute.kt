@@ -49,7 +49,7 @@ fun SearchRoute(
     val isLoading by vm.isLoading.collectAsStateWithLifecycle()
     val documents by vm.documents.collectAsStateWithLifecycle()
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
-    val sort by vm.sort.collectAsStateWithLifecycle()
+    val sort by vm.searchSort.collectAsStateWithLifecycle()
 
     val backStackEntry = remember { nav.currentBackStackEntry }
     LaunchedEffect(backStackEntry) {
@@ -66,7 +66,7 @@ fun SearchRoute(
         isRefreshing = isLoading,
         onRefresh = vm::refresh,
         sort = sort,
-        onSort = vm::setSort
+        onSort = vm::setSearchSort
     )
 }
 
@@ -109,7 +109,10 @@ fun SearchScreen(
                 CustomPicker(
                     title = "정렬",
                     resId = R.drawable.ic_sort,
-                    items = listOf(Sort.ACCURACY.value, Sort.LATEST.value),
+                    items = listOf(
+                        Pair("정확도순", Sort.ACCURACY.value),
+                        Pair("발간일순", Sort.LATEST.value)
+                    ),
                     onItemSelected = {
                         onSort(it)
                     }

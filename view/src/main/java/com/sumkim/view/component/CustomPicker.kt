@@ -35,7 +35,7 @@ fun CustomPicker(
     modifier: Modifier = Modifier,
     @DrawableRes resId: Int,
     title: String,
-    items: List<String>,
+    items: List<Pair<String, String>>,
     onItemSelected: (String) -> Unit = {}
 ) {
     var showPicker by remember { mutableStateOf(false) }
@@ -78,7 +78,7 @@ fun CustomPicker(
 
 @Composable
 fun SystemStyleListPicker(
-    items: List<String>,
+    items: List<Pair<String, String>>,
     onItemSelected: (String) -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -89,12 +89,12 @@ fun SystemStyleListPicker(
                 items.forEach { item ->
                     TextButton(
                         onClick = {
-                            onItemSelected(item)
+                            onItemSelected(item.second)
                             onDismissRequest()
                         }
                     ) {
                         CustomText(
-                            text = item,
+                            text = item.first,
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )

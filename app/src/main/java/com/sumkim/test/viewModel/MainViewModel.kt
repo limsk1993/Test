@@ -11,6 +11,7 @@ import com.sumkim.api.call.onSuccess
 import com.sumkim.api.db.FavoriteDB
 import com.sumkim.api.db.FavoriteDao
 import com.sumkim.test.CommonEvent
+import com.sumkim.test.Filter
 import com.sumkim.test.R
 import com.sumkim.test.Sort
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,8 +40,8 @@ class MainViewModel @Inject constructor(
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
 
-    private val _sort: MutableStateFlow<String> = MutableStateFlow(Sort.ACCURACY.value)
-    val sort: StateFlow<String> = _sort.asStateFlow()
+    private val _searchSort: MutableStateFlow<String> = MutableStateFlow(Sort.ACCURACY.value)
+    val searchSort: StateFlow<String> = _searchSort.asStateFlow()
 
     private val _page: MutableStateFlow<Int> = MutableStateFlow(1)
     val page: StateFlow<Int> = _page.asStateFlow()
@@ -50,6 +51,15 @@ class MainViewModel @Inject constructor(
 
     private val _favoriteDocuments = MutableStateFlow<List<Document>>(listOf())
     val favoriteDocuments = _favoriteDocuments.asStateFlow()
+
+    private val _favoriteQuery: MutableStateFlow<String> = MutableStateFlow("")
+    val favoriteQuery: StateFlow<String> = _favoriteQuery.asStateFlow()
+
+    private val _favoriteSort: MutableStateFlow<String> = MutableStateFlow(Sort.ASC.value)
+    val favoriteSort: StateFlow<String> = _favoriteSort.asStateFlow()
+
+    private val _favoriteFilter: MutableStateFlow<String> = MutableStateFlow(Filter.LOWEST_PRICE.value)
+    val favoriteFilter: StateFlow<String> = _favoriteFilter.asStateFlow()
 
     lateinit var favoriteDao: FavoriteDao
 
@@ -75,9 +85,9 @@ class MainViewModel @Inject constructor(
         getV3SearchBook()
     }
 
-    fun setSort(changeSort: String) {
-        if (sort.value == changeSort) return
-        _sort.value = changeSort
+    fun setSearchSort(sort: String) {
+        if (searchSort.value == sort) return
+        _searchSort.value = sort
         _page.value = 1
         _documents.value = listOf()
         getV3SearchBook()
@@ -90,7 +100,7 @@ class MainViewModel @Inject constructor(
             ar.getV3SearchBook(
                 GetV3SearchBookRequest(
                     query = query.value,
-                    sort = sort.value,
+                    sort = searchSort.value,
                     page = page.value,
                     size = 20
                 )
@@ -116,7 +126,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun refresh() = viewModelScope.launch {
-        _sort.value = Sort.ACCURACY.value
+        _searchSort.value = Sort.ACCURACY.value
         _page.value = 1
         _documents.value = listOf()
         getV3SearchBook()
@@ -137,5 +147,19 @@ class MainViewModel @Inject constructor(
                 _favoriteDocuments.value = favoriteDao.getFavoriteList()
             }
         }
+    }
+
+    fun favoriteSearch(query: String) {
+        _favoriteQuery.value = query
+    }
+
+    fun setFavoriteSort(sort: String) {
+        if (favoriteSort.value == sort) return
+        _favoriteSort.value = sort
+    }
+
+    fun setFavoriteFilter(filter: String) {
+        if (favoriteFilter.value == filter) return
+        _favoriteFilter.value = filter
     }
 }
