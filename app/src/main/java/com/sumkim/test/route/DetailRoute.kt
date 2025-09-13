@@ -25,7 +25,7 @@ import com.sumkim.view.component.CustomAsyncImage
 import com.sumkim.view.component.CustomImageButton
 
 @Composable
-fun ViewerRoute(
+fun DetailRoute(
     vm: MainViewModel = hiltViewModel(),
     selectedIsbn: String? = null,
 ) {
@@ -39,14 +39,14 @@ fun ViewerRoute(
         }
     }
 
-    ViewerScreen(
+    DetailScreen(
         document = vm.selectedSortItems(selectedIsbn),
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewerScreen(
+fun DetailScreen(
     document: Document?,
 ) {
     val nav = Route.nav
@@ -79,10 +79,10 @@ fun ViewerScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun ViewerPreview() {
+fun DetailPreview() {
     TestTheme {
         RouteProvider {
-            ViewerRoute()
+            DetailRoute()
         }
     }
 }

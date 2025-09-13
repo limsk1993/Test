@@ -32,8 +32,8 @@ fun RouteProvider(
     }
 }
 
-fun NavHostController.moveToViewer(isbn: String) {
-    val uri = buildNavUri(Route.Viewer) {
+fun NavHostController.moveToDetail(isbn: String) {
+    val uri = buildNavUri(Route.Detail) {
         optionalEncoded("isbn", isbn)
     }
     navigate(uri)
@@ -81,7 +81,7 @@ object Route {
         @Composable get() = LocalRouteConfig.current.nav!!
 
     const val Main = "main"
-    const val Viewer = "viewer"
+    const val Detail = "detail"
 
-    fun getViewerRoute() = "$Viewer?isbn={isbn}"
+    fun getDetailRoute() = "$Detail?isbn={isbn}"
 }

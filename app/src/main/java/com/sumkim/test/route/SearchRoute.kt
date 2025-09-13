@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sumkim.api.response.Document
 import com.sumkim.test.Route
 import com.sumkim.test.RouteProvider
-import com.sumkim.test.moveToViewer
+import com.sumkim.test.moveToDetail
 import com.sumkim.test.ui.theme.TestTheme
 import com.sumkim.test.viewModel.MainViewModel
 import com.sumkim.view.component.BottomCallBackLazyColumn
@@ -90,7 +89,7 @@ fun SearchScreen(
                         price = item.price,
                         salePrice = item.salePrice,
                         onItemClick = {
-                            nav.moveToViewer(item.isbn)
+                            nav.moveToDetail(item.isbn)
                         },
                         isFavorite = favoriteItems.contains(item),
                         onFavoriteClick = { onFavoriteClick(item) }

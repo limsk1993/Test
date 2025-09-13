@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sumkim.test.route.MainRoute
-import com.sumkim.test.route.ViewerRoute
+import com.sumkim.test.route.DetailRoute
 import com.sumkim.test.ui.theme.TestTheme
 import com.sumkim.test.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,12 +33,12 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Route.Main) { MainRoute(vm) }
                         composable(
-                            Route.getViewerRoute(),
+                            Route.getDetailRoute(),
                             listOf(
                                 navArgument("isbn") { type = NavType.StringType },
                             )
                         ) {
-                            ViewerRoute(
+                            DetailRoute(
                                 vm = vm,
                                 selectedIsbn = it.arguments?.getString("isbn"),
                             )
