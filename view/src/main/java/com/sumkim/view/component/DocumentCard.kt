@@ -34,6 +34,7 @@ fun DocumentCard(
     authors: List<String>?,
     price: Int?,
     salePrice: Int?,
+    datetime: String?,
     modifier: Modifier = Modifier,
     onDocumentClick: (() -> Unit)? = null,
     isFavorite: Boolean = false,
@@ -57,6 +58,7 @@ fun DocumentCard(
             contentScale = ContentScale.Crop
         )
         Spacer(Modifier.width(4.dp))
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -66,28 +68,34 @@ fun DocumentCard(
                 color = Color.Gray,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(Modifier.width(4.dp))
-            CustomText(
-                title ?: "",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.width(4.dp))
-            Row {
+
+            title?.let {
                 CustomText(
-                    "출판사 : ",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray,
+                    it,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                CustomText(
-                    publisher ?: "",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray,
-                )
+                Spacer(Modifier.height(4.dp))
             }
+
+            publisher?.let {
+                Row {
+                    CustomText(
+                        "출판사 : ",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Bold
+                    )
+                    CustomText(
+                        it,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray,
+                    )
+                }
+                Spacer(Modifier.height(4.dp))
+            }
+
             if (!authors.isNullOrEmpty()) {
-                Spacer(Modifier.width(4.dp))
                 Row {
                     CustomText(
                         "저자 : ",
@@ -95,17 +103,43 @@ fun DocumentCard(
                         color = Color.Gray,
                         fontWeight = FontWeight.Bold
                     )
-                    authors.forEach { author ->
-                        CustomText(
-                            author,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.Gray,
-                        )
+                    authors.forEachIndexed { index, author ->
+                        if (index != 0) {
+                            CustomText(
+                                ", $author",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.Gray,
+                            )
+                        } else {
+                            CustomText(
+                                author,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.Gray,
+                            )
+                        }
                     }
                 }
+                Spacer(Modifier.height(4.dp))
+            }
+
+            datetime?.let { datetime ->
+                Row {
+                    CustomText(
+                        "출간일 : ",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray,
+                    )
+                    CustomText(
+                        datetime,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray,
+                    )
+                }
+                Spacer(Modifier.height(4.dp))
             }
         }
         Spacer(Modifier.width(4.dp))
+
         Box(
             modifier = Modifier.fillMaxHeight()
         ) {

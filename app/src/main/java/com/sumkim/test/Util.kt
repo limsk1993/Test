@@ -17,6 +17,9 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -39,6 +42,12 @@ object Extensions {
             }
         }
     }
+}
+
+fun String.getLocalDate(): String {
+    val zonedDateTime = ZonedDateTime.parse(this)
+    val localDate: LocalDate = zonedDateTime.toLocalDate()
+    return localDate.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일"))
 }
 
 sealed interface CommonEvent {

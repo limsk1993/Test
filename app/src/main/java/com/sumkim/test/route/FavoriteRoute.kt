@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sumkim.api.response.Document
 import com.sumkim.test.Route
 import com.sumkim.test.RouteProvider
+import com.sumkim.test.getLocalDate
 import com.sumkim.test.moveToDetail
 import com.sumkim.test.ui.theme.TestTheme
 import com.sumkim.test.viewModel.MainViewModel
@@ -79,6 +80,7 @@ fun FavoriteScreen(
                     authors = document.authors,
                     price = document.price,
                     salePrice = document.salePrice,
+                    datetime = document.datetime?.getLocalDate(),
                     onDocumentClick = {
                         nav.moveToDetail(document)
                     },
