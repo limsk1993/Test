@@ -59,9 +59,6 @@ enum class Sort(val value: String) {
     LATEST("latest"),
     ASC("asc"),
     DESC("desc"),
-}
-
-enum class Filter(val value: String) {
     LOWEST_PRICE("lowest_price"),
-    HIGHEST_PRICE("highest_price")
+    HIGHEST_PRICE("highest_price"),
 }

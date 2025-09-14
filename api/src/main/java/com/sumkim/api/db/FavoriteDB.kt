@@ -7,9 +7,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.sumkim.api.RoomListConverters
 import com.sumkim.api.response.Document
 
@@ -39,6 +41,9 @@ abstract class FavoriteDB: RoomDatabase() {
 interface FavoriteDao {
     @Query("SELECT * FROM favorite_table")
     fun getFavoriteList(): List<Document>
+
+    @RawQuery
+    fun getFavoriteQuerySortFilterList(query: SupportSQLiteQuery): List<Document>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavorite(document: Document)

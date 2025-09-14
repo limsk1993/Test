@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,23 +34,25 @@ import com.sumkim.test.Sort
 import com.sumkim.test.getLocalDate
 import com.sumkim.test.moveToDetail
 import com.sumkim.test.ui.theme.TestTheme
-import com.sumkim.test.viewModel.MainViewModel
+import com.sumkim.test.viewModel.SearchViewModel
 import com.sumkim.view.component.BottomCallBackLazyColumn
 import com.sumkim.view.component.CustomPicker
 import com.sumkim.view.component.CustomSearchBar
 import com.sumkim.view.component.CustomText
 import com.sumkim.view.component.DocumentCard
 import com.sumkim.view.component.PullToRefreshBox
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchRoute(
-    vm: MainViewModel = hiltViewModel()
+    vm: SearchViewModel = hiltViewModel()
 ) {
     val nav = Route.nav
     val isLoading by vm.isLoading.collectAsStateWithLifecycle()
     val documents by vm.documents.collectAsStateWithLifecycle()
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
-    val sort by vm.searchSort.collectAsStateWithLifecycle()
+    val sort by vm.sort.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     val backStackEntry = remember { nav.currentBackStackEntry }
     LaunchedEffect(backStackEntry) {
@@ -61,7 +64,7 @@ fun SearchRoute(
         documents = documents,
         onSearch = vm::querySearch,
         favoriteDocuments = favoriteDocuments,
-        onFavoriteClick = vm::toggleFavorite,
+        onFavoriteClick = { doc ->  coroutineScope.launch { vm.toggleFavorite(doc) } },
         atBottom = vm::getV3SearchBook,
         isRefreshing = isLoading,
         onRefresh = vm::refresh,

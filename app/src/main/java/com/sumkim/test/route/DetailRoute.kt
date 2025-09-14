@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -45,6 +46,7 @@ import com.sumkim.test.viewModel.DetailViewModel
 import com.sumkim.view.component.CustomAsyncImage
 import com.sumkim.view.component.CustomImageButton
 import com.sumkim.view.component.CustomText
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailRoute(
@@ -52,6 +54,7 @@ fun DetailRoute(
 ) {
     val nav = Route.nav
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (vm.ensureInit()) return@LaunchedEffect
@@ -73,7 +76,7 @@ fun DetailRoute(
     DetailScreen(
         document = document,
         favoriteDocuments = favoriteDocuments,
-        onFavoriteClick = vm::toggleFavorite
+        onFavoriteClick = { doc ->  coroutineScope.launch { vm.toggleFavorite(doc) } },
     )
 }
 

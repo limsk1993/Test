@@ -89,8 +89,8 @@ fun MainRoute(
                     .fillMaxSize()
                     .padding(innerPadding),
             ) {
-                composable(BottomNavigationRoute.Search) { SearchRoute(vm) }
-                composable(BottomNavigationRoute.Favorite) { FavoriteRoute(vm) }
+                composable(BottomNavigationRoute.Search) { SearchRoute() }
+                composable(BottomNavigationRoute.Favorite) { FavoriteRoute() }
             }
         }
     )

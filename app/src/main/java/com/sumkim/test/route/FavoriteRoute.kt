@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sumkim.api.response.Document
-import com.sumkim.test.Filter
 import com.sumkim.test.R
 import com.sumkim.test.Route
 import com.sumkim.test.RouteProvider
@@ -36,36 +36,38 @@ import com.sumkim.test.Sort
 import com.sumkim.test.getLocalDate
 import com.sumkim.test.moveToDetail
 import com.sumkim.test.ui.theme.TestTheme
-import com.sumkim.test.viewModel.MainViewModel
+import com.sumkim.test.viewModel.FavoriteViewModel
 import com.sumkim.view.component.CustomPicker
 import com.sumkim.view.component.CustomSearchBar
 import com.sumkim.view.component.CustomText
 import com.sumkim.view.component.DocumentCard
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun FavoriteRoute(
-    vm: MainViewModel = hiltViewModel()
+    vm: FavoriteViewModel = hiltViewModel()
 ) {
     val nav = Route.nav
+    val documents by vm.documents.collectAsStateWithLifecycle()
     val favoriteDocuments by vm.favoriteDocuments.collectAsStateWithLifecycle()
-    val sort by vm.favoriteSort.collectAsStateWithLifecycle()
-    val filter by vm.favoriteFilter.collectAsStateWithLifecycle()
+    val sort by vm.sort.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     val backStackEntry = remember { nav.currentBackStackEntry }
     LaunchedEffect(backStackEntry) {
         vm.getFavoriteDocuments()
+        vm.getFavoriteQuerySortDocuments()
     }
 
     FavoriteScreen(
         modifier = Modifier.fillMaxSize(),
+        documents = documents,
         favoriteDocuments = favoriteDocuments,
-        onSearch = vm::favoriteSearch,
-        onFavoriteClick = vm::toggleFavorite,
+        onSearch = { onSearch -> coroutineScope.launch { vm.favoriteSearch(onSearch) } },
+        onFavoriteClick = vm::getFavoriteAfterToggle,
         sort = sort,
-        onSort = vm::setFavoriteSort,
-        filter = filter,
-        onFilter = vm::setFavoriteFilter
+        onSort = { onSort -> coroutineScope.launch { vm.setFavoriteSort(onSort) } },
     )
 }
 
@@ -73,12 +75,11 @@ fun FavoriteRoute(
 fun FavoriteScreen(
     modifier: Modifier = Modifier,
     onSearch: (String) -> Unit,
+    documents: List<Document>,
     favoriteDocuments: List<Document>,
     onFavoriteClick: (Document) -> Unit,
-    sort: String,
+    sort: String?,
     onSort: (String) -> Unit,
-    filter: String,
-    onFilter: (String) -> Unit,
 ) {
     val nav = Route.nav
     Column(
@@ -96,13 +97,13 @@ fun FavoriteScreen(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 CustomText(
-                    text = if (sort == Sort.ASC.value) "오름차순(제목)" else "내림차순(제목)",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(Modifier.width(4.dp))
-                CustomText(
-                    text = if (filter == Filter.LOWEST_PRICE.value) "낮은가격순" else "높은가격순",
+                    text = when (sort) {
+                        Sort.ASC.value -> "오름차순(제목)"
+                        Sort.DESC.value -> "내림차순(제목)"
+                        Sort.LOWEST_PRICE.value -> "낮은가격순"
+                        Sort.HIGHEST_PRICE.value -> "높은가격순"
+                        else -> ""
+                    },
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -126,11 +127,11 @@ fun FavoriteScreen(
                     title = "정렬",
                     resId = R.drawable.ic_sort,
                     items = listOf(
-                        Pair("낮은가격순", Filter.LOWEST_PRICE.value),
-                        Pair("높은가격순", Filter.HIGHEST_PRICE.value)
+                        Pair("낮은가격순", Sort.LOWEST_PRICE.value),
+                        Pair("높은가격순", Sort.HIGHEST_PRICE.value)
                     ),
                     onItemSelected = {
-                        onFilter(it)
+                        onSort(it)
                     }
                 )
             }
@@ -144,7 +145,7 @@ fun FavoriteScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(8.dp),
         ) {
-            items(favoriteDocuments) { document ->
+            items(documents) { document ->
                 DocumentCard(
                     title = document.title,
                     thumbnail = document.thumbnail,
