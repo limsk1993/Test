@@ -153,7 +153,11 @@ fun DocumentCard(
                 onClick = { onFavoriteClick?.invoke() }
             )
             CustomText(
-                "${salePrice ?: price ?: 0}원",
+                if ((salePrice ?: 0) > 0) {
+                    "${salePrice}원"
+                } else {
+                    "${price}원"
+                },
                 modifier = Modifier.align(Alignment.BottomEnd)
             )
         }

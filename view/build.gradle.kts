@@ -38,5 +38,4 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.material3)
     implementation(libs.coil.compose)
-    implementation(libs.lazyColumnScrollbar)
 }

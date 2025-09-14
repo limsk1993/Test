@@ -240,7 +240,7 @@ fun DetailScreen(
                             Spacer(Modifier.height(4.dp))
                         }
 
-                        document?.salePrice?.let { salePrice ->
+                        if ((document?.salePrice ?: 0) > 0) {
                             Row {
                                 CustomText(
                                     "할인가 : ",
@@ -248,7 +248,7 @@ fun DetailScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                                 CustomText(
-                                    "${salePrice}원",
+                                    "${document?.salePrice}원",
                                     style = MaterialTheme.typography.bodyMedium,
                                     maxLines = Int.MAX_VALUE
                                 )
